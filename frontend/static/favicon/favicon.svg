@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none" width="128" height="128"><defs>
+    <linearGradient id="signspeakPrimary" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0066cc"></stop>
+      <stop offset="100%" stop-color="#20b2aa"></stop>
+    </linearGradient>
+  </defs><path d="M 22 72 L 34 92 M 46 42 L 46 96 M 64 25 L 64 102 M 82 35 L 82 98 M 100 52 L 100 88" stroke="url(#signspeakPrimary)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"></path></svg>
