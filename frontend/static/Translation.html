@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simplify Text - SignSpeak</title>
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="SignSpeak" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <a href="homepage.html" class="logo-link">
+                    <img class="image_logo" src="favicon/favicon.svg" alt="SignSpeak Logo">
+                </a>
+                <a href="homepage.html" style="text-decoration: none; color: inherit;">SignSpeak</a>
+            </div>
+            <ul class="nav-links">
+                <li class="active"><a href="homepage.html"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="Translation.html"><i class="fas fa-language"></i> Translation</a></li>
+                <li><a href="simplify.html"><i class="fas fa-wand-magic-sparkles"></i> Simplify text</a></li>
+                <li><a href="homepage.html#about-us"><i class="fas fa-info-circle"></i> About us</a></li>
+            </ul>
+            <div class="menu-icon" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container main-content">
+        <span style="display:none" id="camera_status">camera_on</span>
+        <section class="hero">
+            <h1>Hand Sign Translation</h1>
+            <p class="description-text">Our AI-powered translator turns hand signs into live text. Use your camera or upload a video to instantly bridge the gap between sign language and written words. It's designed to help students, creators, and teams communicate more inclusively by making gestures digitally readable in real-time.</p>
+        </section>
+    
+        <div class="mode-switcher">
+            <button id="switch-button" class="switch-button">Switch modes</button>
+    
+            <div id="sign-to-text" class="mode-active">
+                <div class="video-wrapper">
+                    <video id="camera" autoplay playsinline style="width: 100%; display: block;"></video>
+                    <canvas id="canvas" style="display:none;"></canvas>
+                </div>
+                
+                <div class="translation-output-box">
+                    <span id="output-text">Text here...</span>
+                </div>
+            </div>
+    
+            <div id="text-to-sign" class="secondary-mode">
+                <h2>Audio Recorder</h2>
+    
+    <div class="controls">
+        <button id="recordBtn">Start Recording</button>
+        <button id="stopBtn" disabled>Stop & Upload</button>
+    </div>
+
+    <div id="status">Ready to record</div>
+    <audio id="preview" controls style="margin-top: 20px; display: none;"></audio>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+
+        const recordBtn = document.getElementById('recordBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const status = document.getElementById('status');
+        const preview = document.getElementById('preview');
+
+        recordBtn.onclick = async () => {
+            audioChunks = []; // Clear previous data
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = async () => {
+                    console.log("Recoding stopped")
+                    // Create the Blob
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    
+                    // Show preview to user
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    console.log(audioUrl)
+                    preview.src = audioUrl;
+                    preview.style.display = 'block';
+
+                    // Upload to Backend
+                    uploadAudio(audioBlob);
+                };
+
+                mediaRecorder.start();
+                status.innerText = "Recording...";
+                recordBtn.disabled = true;
+                stopBtn.disabled = false;
+            } catch (err) {
+                status.innerText = "Error: Microphone access denied.";
+                console.error(err);
+            }
+        };
+
+        stopBtn.onclick = () => {
+            mediaRecorder.stop();
+            status.innerText = "Uploading file...";
+            recordBtn.disabled = false;
+            stopBtn.disabled = true;
+        };
+
+        async function uploadAudio(blob) {
+            const formData = new FormData();
+            // This 'audio_data' key MUST match your backend (req.file or request.files)
+            formData.set('audio_data', blob, 'recording.wav');
+            for (let [key, value] of formData.entries()) {
+                console.log(key, value); 
+                // Output: audio_data Blob { size: 12345, type: "audio/wav" }
+            }
+            const {SERVER_SIMPLIFY_URL}=getConfig();
+            try {
+                const response = await fetch(`${SERVER_SIMPLIFY_URL}/tts`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    status.innerText = "Upload successful!";
+                    document.getElementById("text-input").value=result;
+                    console.log('Server response:', result);
+                } else {
+                    status.innerText = "Upload failed server-side.";
+                }
+            } catch (error) {
+                status.innerText = "Network error: Is the backend running?";
+                console.error('Error:', error);
+            }
+        }
+    </script>
+                <textarea id="text-input" placeholder="Enter text:" style="width: 100%; border-radius: 10px; border: 2px solid #26b5a3; padding: 15px; margin-bottom: 15px;"></textarea>
+                <div id="output-video" class="video-wrapper" style="min-height: 200px; display: flex; align-items: center; justify-content: center; color: white;">
+                    Sign video here...
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-logo">SignSpeak</div>
+            
+            <div class="contact-section">
+                <p>Contact us:</p>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com/?hl=bg" class="social-btn" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://x.com/" class="social-btn" aria-label="Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.facebook.com/?locale=bg_BG" class="social-btn" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 SignSpeak. All rights reserved.
+        </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="CameraDataCollection.js"></script>
+    <script src="SwitchTranslator.js"></script>
+    <script src="Menu_SmallerDevice.js"></script>
+</body>
+</html>   

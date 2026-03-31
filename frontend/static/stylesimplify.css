@@ -1,0 +1,381 @@
+body {
+    font-family: 'Lexend', sans-serif;
+    background-color: #f8f9fa;
+    color: #333333;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0px 20px;
+}
+
+/* --- Master Header & Navigation --- */
+header {
+    background-color: #ffffff;
+    padding: 20px 0;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+}
+
+/* This creates the "Logo on Left, Links on Right" look */
+header nav {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 0px;
+    display: flex;
+    justify-content: space-between; /* Pushes Logo left and Nav right */
+    align-items: center;
+}
+
+/* Fixes the Purple Link Issue & Font Size */
+.logo a {
+    font-size: 32px;
+    font-weight: 800;
+    color: #000000 !important; /* !important forces it to stay black, never purple */
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* Puts links in a row */
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+    margin: 0;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+/* Hover Effect: Teal line and text */
+.nav-links a:not(.active):hover {
+    color: #38b2ac !important;
+    border-bottom: 2px solid #38b2ac;
+}
+
+/* Active Page: Bold and Navy Line */
+.nav-links a.active {
+    font-weight: 800; 
+    color: #000000;
+    border-bottom: 2px solid #001f3f; 
+    display: inline-block;
+}
+
+/* --- Responsive Fix --- */
+@media (max-width: 768px) {
+    header nav {
+        flex-direction: row; /* Keeps them on one line even on small screens */
+        justify-content: space-between;
+    }
+    .nav-links {
+        gap: 15px; /* Tightens spacing for mobile */
+    }
+    .nav-links a {
+        font-size: 0.9rem;
+    }
+}
+.workspace {
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.input-card, .output-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.card-icon {
+    font-size: 24px;
+}
+
+.input-icon {
+    color: #0a84ff;
+}
+
+.output-icon {
+    color: #26b5a3;
+}
+
+.card-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #000000;
+}
+
+textarea {
+    width: 100%;
+    height: 350px;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    padding: 15px;
+    font-size: 16px;
+    resize: none;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.action-bar {
+    text-align: center;
+    margin-bottom: 50px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn {
+    border: none;
+    padding: 16px 36px;
+    font-size: 18px;
+    font-weight: 700;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.simplify-btn {
+    background-color: #26b5a3;
+    color: #ffffff;
+}
+
+.listen-btn {
+    background-color: #025cb7;
+    color: #ffffff;
+}
+
+.info-panel {
+    background-color: #e6f0ff;
+    border-radius: 12px;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.info-icon {
+    font-size: 32px;
+    color: #0a84ff;
+}
+footer {
+    background-color: #eaf7f0;
+    padding: 40px 0 20px 0;
+    font-family: sans-serif;
+    color: #000000; /* Darker text for readability against the light blue */
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.footer-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000000; /* A deeper blue for the brand name */
+}
+
+.contact-section p {
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.social-btn {
+    text-decoration: none;
+    color: #000000;
+    font-size: 1.2rem;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* Hover effect for a bit of flair */
+.social-btn:hover {
+    color: #007bff;
+    transform: translateY(-3px);
+}
+
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* Responsive: Stack them on small screens */
+@media (max-width: 600px) {
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+}
+.simplifyTextArea{
+    font-family: Arial;
+    font-size: 18px;
+    line-height: 1.5px;
+    letter-spacing: 0.5px;
+    text-align: left;
+    background-color: #eaf7f0;
+    color: #2e2e2e;
+} 
+
+#inputArea{
+    font-family: 'Lexend', sans-serif;
+    font-size: 20px;
+    line-height: 1.6;
+    word-spacing: 2px;
+    letter-spacing: 0.2px;
+    text-align: left;
+    background-color: #eaf7f0;
+    color: #2e2e2e;
+    padding: 22px;
+}
+
+#outputArea{
+    font-family: 'Lexend', sans-serif;
+    font-size: 20px;
+    line-height: 1.6;
+    word-spacing: 2px;
+    letter-spacing: 0.2px;
+    text-align: left;
+    background-color: #eaf7f0;
+    color: #2e2e2e;
+    padding: 22px;
+}
+/* 1. Desktop View (Default) */
+.menu-icon {
+    display: none; /* Hide the 3 lines on PC */
+    cursor: pointer;
+    font-size: 30px;
+}
+/* --- Unified Mobile Responsive Menu --- */
+@media (max-width: 768px) {
+    header nav {
+        position: relative; /* Helps anchor the dropdown */
+        justify-content: space-between;
+    }
+
+    /* 1. Show the 3-line menu icon on mobile */
+    .menu-icon {
+        display: block !important; 
+        font-size: 28px;
+        cursor: pointer;
+        color: #333;
+        z-index: 1100;
+    }
+
+    /* 2. Hide the links and turn them into the dropdown box */
+    .nav-links {
+        display: none; /* Hidden by default */
+        position: absolute;
+        top: 100%;     /* Drops down from the bottom of header */
+        left: 0;
+        width: 100%;
+        background-color: #ffffff;
+        flex-direction: column; 
+        padding: 20px 0;
+        box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        z-index: 1000;
+        gap: 0; /* Remove the gap from desktop */
+    }
+
+    /* 3. Show when JS adds the .active class */
+    .nav-links.active {
+        display: flex;
+    }
+
+    /* 4. Spacing for the rows in the menu */
+    .nav-links li {
+        width: 100%;
+        text-align: center;
+        padding: 15px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .nav-links a {
+        font-size: 1.1rem;
+        display: block;
+        width: 100%;
+    }
+
+    /* Space out the icons you added */
+    .nav-links i {
+        margin-right: 10px;
+        width: 25px;
+    }
+}
+
+.image_logo{
+    width: 40px;
+    height: auto;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.logo {
+    display: flex;
+    align-items: center; 
+    gap: 10px;           
+}
+
+.loader {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: inline-block;
+    border-top: 3px solid #FF3D00;
+    border-right: 3px solid transparent;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+
+@keyframes rotation {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .loader-container {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+  }

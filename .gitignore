@@ -1,0 +1,8 @@
+venv-ml
+venv
+/data
+__pycache__
+.env
+frontend/static/config.js
+venv-frontend
+backend/backend_main/uploads
