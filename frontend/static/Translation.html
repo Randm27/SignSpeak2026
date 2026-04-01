@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simplify Text - SignSpeak</title>
-    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+     <!--<link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
     <link rel="shortcut icon" href="/favicon/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+-->
     <meta name="apple-mobile-web-app-title" content="SignSpeak" />
+    <!--
     <link rel="manifest" href="/favicon/site.webmanifest" />
+-->
     <link rel="stylesheet" href="style.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -49,12 +52,16 @@
     
             <div id="sign-to-text" class="mode-active">
                 <div class="video-wrapper">
-                    <video id="camera" autoplay playsinline style="width: 100%; display: block;"></video>
+                    <video id="camera" autoplay playsinline muted style="width: 100%; display: block;"></video>
                     <canvas id="canvas" style="display:none;"></canvas>
                 </div>
                 
+                <button id="startBtn" style="display:none; margin-top: 10px;">
+                    Start Camera
+                </button>
+                
                 <div class="translation-output-box">
-                    <span id="output-text">Text here...</span>
+                    <div id="output-text">Text here...</div>
                 </div>
             </div>
     
@@ -176,7 +183,8 @@
         </div>
     </footer>
 
-    <script src="config.js"></script>
+    <!--<script src="config.js"></script>
+-->
     <script src="CameraDataCollection.js"></script>
     <script src="SwitchTranslator.js"></script>
     <script src="Menu_SmallerDevice.js"></script>
