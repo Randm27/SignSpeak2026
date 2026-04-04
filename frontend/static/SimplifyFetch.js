@@ -12,7 +12,7 @@ async function sendTextToBackend() {
     const inputText = document.getElementById("inputArea").value;
     showLoader();
 
-    const { SERVER_SIMPLIFY_URL } = getconfgi();
+    const { SERVER_SIMPLIFY_URL } = getconfig();
 
     const response = await fetch(`${SERVER_SIMPLIFY_URL}/simplify`, {
         method: "POST",
