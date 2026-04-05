@@ -25,7 +25,7 @@ def hand_gesture_classification(image):
         probs = torch.nn.functional.softmax(logits, dim=1).squeeze().tolist()
     
     labels = model.config.id2label
-    predictions = {labels[str(i)]: round(probs[i], 3) for i in range(len(probs))}
+    predictions = {labels[i]: round(probs[i], 3) for i in range(len(probs))}
     
     return predictions
 
