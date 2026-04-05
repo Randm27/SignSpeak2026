@@ -21,6 +21,28 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.post("/analyze-frame")
 @cross_origin()
+# def analyze():
+#     data = request.json["image"]
+#     return jsonify({"gesture":from_base64_string(data)})
 def analyze():
-    data = request.json["image"]
-    return jsonify({"gesture":from_base64_string(data)})
+    try:
+        data = request.json.get("image")
+        print("Received frame:", "None" if data is None else len(data))
+
+        if not data:
+            return jsonify({"error": "No frame received"}), 400
+
+        gesture = from_base64_string(data)
+        return jsonify({"gesture": gesture})
+
+    except Exception as e:
+        print("ERROR in analyze():", e)
+        return jsonify({"error": str(e)}), 500
+
+@app.post("/ping")
+@cross_origin()
+def ping():
+    return jsonify({"status": "ok", "message": "server is running"}), 200
+
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=5001)

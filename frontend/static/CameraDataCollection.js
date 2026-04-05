@@ -27,7 +27,7 @@ async function startCamera() {
           if (result && result.gesture && outputText) {
               outputText.textContent += result.gesture;
           }
-      }, 1000);
+      }, 60 * 1000);
 
   } catch (err) {
       console.error("Camera Error:", err);
@@ -76,8 +76,10 @@ async function sendFrameToBackend() {
     return ;
   }
   const frame = captureFrame();
+  if(!frame) return null;
+
   console.log();
-  const { SERVER_GESTURE_URL } = getConfig();
+  const { SERVER_GESTURE_URL } = getconfig();
 
   const response = await fetch(`${SERVER_GESTURE_URL}/analyze-frame`, {
     method: "POST",
@@ -108,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
       startCamera();
   }
 });
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("JS running and DOM loaded"); // debug line
-  initCamera(); // we will create this function to start the camera / button logic
-});
+// document.addEventListener("DOMContentLoaded", () => {
+//   console.log("JS running and DOM loaded"); // debug line
+//   initCamera(); // we will create this function to start the camera / button logic
+// });

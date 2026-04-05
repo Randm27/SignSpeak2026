@@ -1,3 +1,5 @@
+;
+
 function showLoader() {
     document.getElementById("outputArea").style.display = "none";
     document.querySelector(".loader-container").style.display = "flex";

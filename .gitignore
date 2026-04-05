@@ -6,3 +6,4 @@ __pycache__
 frontend/static/config.js
 venv-frontend
 backend/backend_main/uploads
+dataset/

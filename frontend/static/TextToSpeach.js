@@ -1,3 +1,5 @@
+;
+
 const listenBtn = document.getElementById('listenBtn');
 const outputArea = document.getElementById('outputArea');
 

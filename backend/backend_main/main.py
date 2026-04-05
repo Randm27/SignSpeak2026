@@ -72,3 +72,7 @@ async def receive_audio(audio_data: UploadFile = File(...)):
         shutil.copyfileobj(audio_data.file, buffer)
     
     return transcribe_audio(file_path)
+
+@app.post("/ping")
+def ping():
+    return {"status": "ok", "message": "server is running"}
