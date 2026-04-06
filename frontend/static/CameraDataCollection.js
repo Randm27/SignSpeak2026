@@ -1,39 +1,84 @@
+let intervalId = null;
+let isRunning = false;
+let countdownInterval = null; // for the 5→1 timer
+
 async function startCamera() {
   const video = document.getElementById("camera");
   const outputText = document.getElementById("output-text") || document.querySelector(".output-text");
+  const start_stopButton = document.getElementById("start-and-stop");
 
   try {
-      const constraints = {
-          video: {
-              facingMode: "user",
-              width: { ideal: 640 },
-              height: { ideal: 480 }
-          }
-      };
+    const constraints = {
+      video: {
+        facingMode: "user",
+        width: { ideal: 640 },
+        height: { ideal: 480 }
+      }
+    };
 
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      video.srcObject = stream;
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    video.srcObject = stream;
 
-      // Force play for mobile Safari/Chrome
-      await video.play();
+    await video.play();
 
-      // Hide placeholder if it exists
-      const icon = document.querySelector('.camera-placeholder-icon');
-      if (icon) icon.style.display = 'none';
+    const icon = document.querySelector('.camera-placeholder-icon');
+    if (icon) icon.style.display = 'none';
 
-      // Single interval for frame analysis
-      setInterval(async () => {
-          const result = await sendFrameToBackend();
-          if (result && result.gesture && outputText) {
-              outputText.textContent += result.gesture;
-          }
-      }, 60 * 1000);
+    start_stopButton.addEventListener("click", () => {
+
+      // STOP
+      if (isRunning) {
+        clearInterval(intervalId);
+        clearInterval(countdownInterval);
+        intervalId = null;
+        countdownInterval = null;
+        isRunning = false;
+        return;
+      }
+
+      // START
+      outputText.textContent = "";
+      isRunning = true;
+
+      startCountdown(); // start timer immediately
+
+      intervalId = setInterval(async () => {
+        startCountdown(); // restart timer every 5s
+
+        const result = await sendFrameToBackend();
+        if (result && result.gesture && outputText) {
+          outputText.textContent += result.gesture;
+        }
+      }, 5 * 1000);
+    });
 
   } catch (err) {
-      console.error("Camera Error:", err);
-      alert("Make sure you are on HTTPS and have granted camera permissions.");
+    console.error("Camera Error:", err);
+    alert("Make sure you are on HTTPS and have granted camera permissions.");
   }
 }
+
+function startCountdown() {
+  const countdownEl = document.getElementById("countdown");
+  if (!countdownEl) return;
+
+  let timeLeft = 5;
+  countdownEl.textContent = timeLeft;
+
+  clearInterval(countdownInterval);
+
+  countdownInterval = setInterval(() => {
+    timeLeft--;
+    countdownEl.textContent = timeLeft;
+
+    if (timeLeft <= 1) {
+      clearInterval(countdownInterval);
+    }
+  }, 1000);
+}
+
+// make sure this actually runs
+window.addEventListener("load", startCamera);
 
 function captureFrame() {
   const video = document.getElementById("camera");
