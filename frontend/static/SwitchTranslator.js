@@ -4,6 +4,7 @@ const signToText = document.getElementById("sign-to-text");
 const textToSign = document.getElementById("text-to-sign");
 const switchButton = document.getElementById("switch-button");
 const camera_status = document.getElementById("camera_status");
+const textInput = document.getElementById("text-input");
 
 switchButton.addEventListener("click", () =>{
     signToText.classList.toggle("mode-active");  
@@ -20,3 +21,14 @@ switchButton.addEventListener("click", () =>{
         camera_status.textContent="camera_on";
     }
 });
+
+// Handle text input to display images in grid (ONLY in text-to-sign mode)
+if (textInput) {
+    textInput.addEventListener("input", (e) => {
+        // Only trigger grid display if text-to-sign mode is active
+        if (textToSign.classList.contains("mode-active")) {
+            const text = e.target.value.trim();
+            displayTextToSignGrid(text, 'image-grid-container');
+        }
+    });
+}
