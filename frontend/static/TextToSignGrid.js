@@ -57,15 +57,6 @@ function displayImageGrid(data, container) {
     gridWrapper.style.border = '1px solid #26b5a3';
     gridWrapper.style.marginBottom = '15px';
 
-    // Add title
-    const title = document.createElement('h3');
-    title.textContent = `Signs for: "${data.clean_text}" (${data.count} letters)`;
-    title.style.gridColumn = '1 / -1';
-    title.style.margin = '0 0 10px 0';
-    title.style.fontSize = '16px';
-    title.style.color = '#333';
-    gridWrapper.appendChild(title);
-
     // Create image items
     data.images.forEach((imageObj) => {
         // Create card
