@@ -7,3 +7,4 @@ frontend/static/config.js
 venv-frontend
 backend/backend_main/uploads
 dataset/
+backend/backend_ml/my_gesture_model/
