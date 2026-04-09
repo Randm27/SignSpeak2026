@@ -12,6 +12,17 @@ switchButton.addEventListener("click", () =>{
 
     textToSign.classList.toggle("mode-active");
     textToSign.classList.toggle("secondary-mode");
+
+    const timer = document.getElementById("countdown");
+    if(timer){
+        if(signToText.classList.contains("mode-active")){
+            timer.style.display = "block";
+        }
+        else{
+            timer.style.display = "none";
+        }
+    }
+
     const camera_status_value=camera_status.textContent;
     console.log(camera_status_value);
     if(camera_status_value=="camera_on"){
