@@ -34,7 +34,23 @@ def sort_predictions(predictions):
     return list(sorted(list(predictions.items()), key = lambda x:x[1], reverse=1))[0][0]
 
 
+# def from_base64_string(base64_string):
+#     if "data:image" in base64_string:
+#         base64_string = base64_string.split(",")[1]
+#     return sort_predictions(hand_gesture_classification(np.asarray(Image.open(BytesIO(base64.b64decode(base64_string))))))
+
 def from_base64_string(base64_string):
     if "data:image" in base64_string:
         base64_string = base64_string.split(",")[1]
-    return sort_predictions(hand_gesture_classification(np.asarray(Image.open(BytesIO(base64.b64decode(base64_string))))))
+
+    prediction = sort_predictions(
+        hand_gesture_classification(
+            np.asarray(Image.open(BytesIO(base64.b64decode(base64_string))))
+        )
+    )
+
+    # FIX: convert model label "space" to actual space character
+    if prediction == "space":
+        return " "
+
+    return prediction
