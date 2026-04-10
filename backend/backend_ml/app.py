@@ -38,60 +38,64 @@ def analyze():
 @cross_origin()
 def get_images_for_text(text):
     """
-    Returns first image for each letter in the text as base64.
-    Removes spaces and converts to lowercase.
+    Returns first image for each character in the text as base64.
+    Supports letters and spaces.
     """
     try:
-        clean_text = text.replace(" ", "").lower()
-        letters = [char for char in clean_text if char.isalpha()]
-        
-        if not letters:
-            return jsonify({"error": "No letters found in text"}), 400
-        
+        clean_text = text.lower()
+        characters = list(clean_text)
+
+        if not characters:
+            return jsonify({"error": "No characters found in text"}), 400
+
         images_data = []
-        
-        for letter in letters:
-            letter_folder = os.path.join(DATASET_PATH, letter)
-            
-            if not os.path.isdir(letter_folder):
+
+        for char in characters:
+            # Handle space
+            if char == " ":
+                char_folder = os.path.join(DATASET_PATH, "space")
+                char_label = "space"
+
+            # Handle letters
+            elif char.isalpha():
+                char_folder = os.path.join(DATASET_PATH, char)
+                char_label = char
+
+            # Skip anything else
+            else:
                 continue
-            
+
+            if not os.path.isdir(char_folder):
+                continue
+
             image_extensions = ('.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp')
-            images = sorted([f for f in os.listdir(letter_folder) 
-                           if os.path.isfile(os.path.join(letter_folder, f)) 
-                           and f.lower().endswith(image_extensions)])
-            
+            images = sorted([
+                f for f in os.listdir(char_folder)
+                if os.path.isfile(os.path.join(char_folder, f))
+                and f.lower().endswith(image_extensions)
+            ])
+
             if not images:
                 continue
-            
+
             first_image = images[0]
-            img_path = os.path.join(letter_folder, first_image)
-            
+            img_path = os.path.join(char_folder, first_image)
+
             with open(img_path, 'rb') as f:
                 img_base64 = base64.b64encode(f.read()).decode('utf-8')
                 images_data.append({
-                    "letter": letter,
+                    "letter": char_label,
                     "filename": first_image,
                     "data": f"data:image/jpeg;base64,{img_base64}"
                 })
-        
+
         return jsonify({
             "original_text": text,
             "clean_text": clean_text,
             "count": len(images_data),
             "images": images_data
         }), 200
-    
+
     except Exception as e:
         print("ERROR in get_images_for_text():", e)
         return jsonify({"error": str(e)}), 500
-
-
-@app.route("/ping", methods=["POST"])
-@cross_origin()
-def ping():
-    return jsonify({"status": "ok", "message": "server is running"}), 200
-
-
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5001)

@@ -59,7 +59,6 @@ function displayImageGrid(data, container) {
 
     // Create image items
     data.images.forEach((imageObj) => {
-        // Create card
         const card = document.createElement('div');
         card.style.backgroundColor = 'white';
         card.style.borderRadius = '6px';
@@ -68,28 +67,20 @@ function displayImageGrid(data, container) {
         card.style.transition = 'transform 0.2s ease';
         card.style.cursor = 'pointer';
 
-        // Add hover effect
-        card.addEventListener('mouseenter', () => {
-            card.style.transform = 'translateY(-3px)';
-            card.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
-        });
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'translateY(0)';
-            card.style.boxShadow = '0 1px 4px rgba(0, 0, 0, 0.1)';
-        });
-
-        // Create image
         const img = document.createElement('img');
         img.src = imageObj.data;
-        img.alt = `Letter ${imageObj.letter}`;
+
+        // FIX: support both "letter" and "character"
+        const char = imageObj.letter || imageObj.character;
+
+        img.alt = `Letter ${char}`;
         img.style.width = '100%';
         img.style.height = '130px';
         img.style.objectFit = 'cover';
         img.style.display = 'block';
 
-        // Create label
         const label = document.createElement('div');
-        label.textContent = imageObj.letter.toUpperCase();
+        label.textContent = char.toUpperCase();
         label.style.textAlign = 'center';
         label.style.padding = '8px';
         label.style.fontSize = '14px';
