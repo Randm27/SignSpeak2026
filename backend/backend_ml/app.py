@@ -53,8 +53,7 @@ def get_images_for_text(text):
         for char in characters:
             # Handle space
             if char == " ":
-                char_folder = os.path.join(DATASET_PATH, "space")
-                char_label = "space"
+                continue
 
             # Handle letters
             elif char.isalpha():
