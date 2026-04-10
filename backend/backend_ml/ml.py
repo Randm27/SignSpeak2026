@@ -10,7 +10,7 @@ import numpy as np
 import base64
 
 # Load model and processor
-model_name = "prithivMLmods/Hand-Gesture-19"
+model_name = "my_gesture_model"
 model = SiglipForImageClassification.from_pretrained(model_name)
 processor = AutoImageProcessor.from_pretrained(model_name)
 
