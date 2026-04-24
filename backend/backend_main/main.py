@@ -26,7 +26,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
-from Speech_to_text import transcribe_audio
 from fastapi import FastAPI, File, UploadFile
 import shutil
 
@@ -66,16 +65,6 @@ def simplify_text(text):
 def simplify(req: TextRequest):
     result = simplify_text(req.text)
     return {"simplified": result}
-
-@app.post("/tts")
-async def receive_audio(audio_data: UploadFile = File(...)):
-    print(audio_data)
-    file_path=f"./uploads/{audio_data.filename}"
-    
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(audio_data.file, buffer)
-    
-    return transcribe_audio(file_path)
 
 @app.post("/ping")
 def ping():

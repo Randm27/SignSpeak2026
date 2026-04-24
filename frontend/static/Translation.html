@@ -3,18 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simplify Text - SignSpeak</title>
-     <!--<link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
-    <link rel="shortcut icon" href="/favicon/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
--->
-    <meta name="apple-mobile-web-app-title" content="SignSpeak" />
-    <!--
-    <link rel="manifest" href="/favicon/site.webmanifest" />
--->
+    <title>Translation - SignSpeak</title>
     <link rel="stylesheet" href="style.css">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700;800&display=swap" rel="stylesheet">
 </head>
@@ -29,8 +19,8 @@
                 <a href="homepage.html" style="text-decoration: none; color: inherit;">SignSpeak</a>
             </div>
             <ul class="nav-links">
-                <li class="active"><a href="homepage.html"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="Translation.html"><i class="fas fa-language"></i> Translation</a></li>
+                <li><a href="homepage.html"><i class="fas fa-home"></i> Home</a></li>
+                <li class="active"><a href="Translation.html"><i class="fas fa-language"></i> Translation</a></li>
                 <li><a href="simplify.html"><i class="fas fa-wand-magic-sparkles"></i> Simplify text</a></li>
                 <li><a href="homepage.html#about-us"><i class="fas fa-info-circle"></i> About us</a></li>
             </ul>
@@ -42,16 +32,15 @@
 
     <main class="container main-content">
         <span style="display:none" id="camera_status">camera_on</span>
+        
         <section class="hero">
             <h1>Hand Sign Translation</h1>
-            <p class="description-text">Our AI-powered translator turns hand signs into live text. Use your camera or upload a video to instantly bridge the gap between sign language and written words. It's designed to help students, creators, and teams communicate more inclusively by making gestures digitally readable in real-time.</p>
+            <p class="description-text">Bridge the gap between sign language and spoken words instantly.</p>
         </section>
     
         <div class="mode-switcher">
             <button type="button" id="switch-button" class="switch-button">Switch modes</button>
-
             <button type="button" id="start-and-stop" class="switch-button">Start/Stop</button>
-
             <p id="countdown">5</p>
     
             <div id="sign-to-text" class="mode-active">
@@ -59,127 +48,43 @@
                     <video id="camera" autoplay playsinline muted style="width: 100%; display: block;"></video>
                     <canvas id="canvas" style="display:none;"></canvas>
                 </div>
-                
-                <button id="startBtn" style="display:none; margin-top: 10px;">
-                    Start Camera
-                </button>
-                
+                <button id="startBtn" style="display:none; margin-top: 10px;">Start Camera</button>
                 <div class="translation-output-box">
                     <div id="output-text">Text here...</div>
                 </div>
             </div>
     
             <div id="text-to-sign" class="secondary-mode">
-                <h2>Audio Recorder</h2>
-    
-    <div class="controls">
-        <button id="recordBtn">Start Recording</button>
-        <button id="stopBtn" disabled>Stop & Upload</button>
-    </div>
-
-    <div id="status">Ready to record</div>
-    <audio id="preview" controls style="margin-top: 20px; display: none;"></audio>
-
-    <script>
-        let mediaRecorder;
-        let audioChunks = [];
-
-        const recordBtn = document.getElementById('recordBtn');
-        const stopBtn = document.getElementById('stopBtn');
-        const status = document.getElementById('status');
-        const preview = document.getElementById('preview');
-
-        recordBtn.onclick = async () => {
-            audioChunks = []; // Clear previous data
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                mediaRecorder = new MediaRecorder(stream);
+                <h2>Voice & Text to Sign</h2>
                 
-                mediaRecorder.ondataavailable = (event) => {
-                    audioChunks.push(event.data);
-                };
+                <div class="controls" style="margin-bottom: 20px;">
+                    <button id="recordBtn" class="switch-button" style="background-color: #26b5a3;">🎤 Start Recording</button>
+                    <button id="stopBtn" class="switch-button" disabled style="background-color: #ff4b4b;">🛑 Stop & Translate</button>
+                </div>
 
-                mediaRecorder.onstop = async () => {
-                    console.log("Recoding stopped")
-                    // Create the Blob
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                    
-                    // Show preview to user
-                    const audioUrl = URL.createObjectURL(audioBlob);
-                    console.log(audioUrl)
-                    preview.src = audioUrl;
-                    preview.style.display = 'block';
+                <div id="status" style="margin-bottom: 10px; font-weight: bold; color: #26b5a3;">Ready to record voice</div>
+                <audio id="preview" controls style="margin: 10px auto; display: none;"></audio>
 
-                    // Upload to Backend
-                    uploadAudio(audioBlob);
-                };
-
-                mediaRecorder.start();
-                status.innerText = "Recording...";
-                recordBtn.disabled = true;
-                stopBtn.disabled = false;
-            } catch (err) {
-                status.innerText = "Error: Microphone access denied.";
-                console.error(err);
-            }
-        };
-
-        stopBtn.onclick = () => {
-            mediaRecorder.stop();
-            status.innerText = "Uploading file...";
-            recordBtn.disabled = false;
-            stopBtn.disabled = true;
-        };
-
-        async function uploadAudio(blob) {
-            const formData = new FormData();
-            // This 'audio_data' key MUST match your backend (req.file or request.files)
-            formData.set('audio_data', blob, 'recording.wav');
-            for (let [key, value] of formData.entries()) {
-                console.log(key, value); 
-                // Output: audio_data Blob { size: 12345, type: "audio/wav" }
-            }
-            const {SERVER_SIMPLIFY_URL}=getConfig();
-            try {
-                const response = await fetch(`${SERVER_SIMPLIFY_URL}/tts`, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (response.ok) {
-                    const result = await response.json();
-                    status.innerText = "Upload successful!";
-                    document.getElementById("text-input").value=result;
-                    console.log('Server response:', result);
-                } else {
-                    status.innerText = "Upload failed server-side.";
-                }
-            } catch (error) {
-                status.innerText = "Network error: Is the backend running?";
-                console.error('Error:', error);
-            }
-        }
-    </script>
-                <textarea id="text-input" placeholder="Enter text:" style="width: 100%; border-radius: 10px; border: 2px solid #26b5a3; padding: 15px; margin-bottom: 15px;"></textarea>
+                <textarea id="text-input" placeholder="Type here or use the microphone..." style="width: 100%; border-radius: 10px; border: 2px solid #26b5a3; padding: 15px; margin-bottom: 15px; font-family: 'Lexend', sans-serif;"></textarea>
+                
                 <div id="image-grid-container"></div>
-                <div id="output-video" style="display: none" class="video-wrapper" style="min-height: 200px; display: flex; align-items: center; justify-content: center; color: white;">
+                
+                <div id="output-video" style="display: none" class="video-wrapper">
                     Sign video here...
                 </div>
             </div>
         </div>
     </main>
 
-
     <footer>
         <div class="container footer-content">
             <div class="footer-logo">SignSpeak</div>
-            
             <div class="contact-section">
                 <p>Contact us:</p>
                 <div class="social-icons">
-                    <a href="https://www.instagram.com/?hl=bg" class="social-btn" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
-                    <a href="https://x.com/" class="social-btn" aria-label="Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
-                    <a href="https://www.facebook.com/?locale=bg_BG" class="social-btn" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
                 </div>
             </div>
         </div>
@@ -188,12 +93,86 @@
         </div>
     </footer>
 
-    <!--<script src="config.js"></script>
---> 
     <script src="config.js"></script>
+
+    <script>
+        (function() {
+            let mediaRecorder;
+            let audioChunks = [];
+
+            const recordBtn = document.getElementById('recordBtn');
+            const stopBtn = document.getElementById('stopBtn');
+            const statusLabel = document.getElementById('status');
+            const previewEl = document.getElementById('preview');
+            const textInputEl = document.getElementById('text-input');
+
+            if (recordBtn && stopBtn) {
+                recordBtn.onclick = async () => {
+                    audioChunks = []; 
+                    try {
+                        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                        mediaRecorder = new MediaRecorder(stream);
+                        
+                        mediaRecorder.ondataavailable = (event) => audioChunks.push(event.data);
+                        mediaRecorder.onstop = () => {
+                            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                            previewEl.src = URL.createObjectURL(audioBlob);
+                            previewEl.style.display = 'block';
+                            uploadAudio(audioBlob);
+                        };
+
+                        mediaRecorder.start();
+                        statusLabel.innerText = "Listening...";
+                        recordBtn.disabled = true;
+                        stopBtn.disabled = false;
+                    } catch (err) {
+                        statusLabel.innerText = "Mic error!";
+                        console.error(err);
+                    }
+                };
+
+                stopBtn.onclick = () => {
+                    if (mediaRecorder) mediaRecorder.stop();
+                    statusLabel.innerText = "Processing...";
+                    recordBtn.disabled = false;
+                    stopBtn.disabled = true;
+                };
+            }
+
+            async function uploadAudio(blob) {
+                const formData = new FormData();
+                formData.append('audio', blob, 'recording.wav');
+
+                try {
+                    const cfg = typeof getconfig === 'function' ? getconfig() : { SERVER_GESTURE_URL: "http://127.0.0.1:5001" };
+                    const response = await fetch(`${cfg.SERVER_GESTURE_URL}/speech-to-text`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        if (result.text) {
+                            statusLabel.innerText = "Transcribed!";
+                            textInputEl.value = result.text;
+                            // Trigger the global function from TextToSignGrid.js
+                            if (window.displayTextToSignGrid) {
+                                window.displayTextToSignGrid(result.text);
+                            }
+                        }
+                    } else {
+                        statusLabel.innerText = "Transcription failed.";
+                    }
+                } catch (e) {
+                    statusLabel.innerText = "Server offline (5001).";
+                }
+            }
+        })();
+    </script>
+
     <script src="CameraDataCollection.js"></script>
     <script src="TextToSignGrid.js"></script>
     <script src="SwitchTranslator.js"></script>
     <script src="Menu_SmallerDevice.js"></script>
 </body>
-</html>   
+</html>
