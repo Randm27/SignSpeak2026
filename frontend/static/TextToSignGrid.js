@@ -22,7 +22,7 @@ async function displayTextToSignGrid(text, containerId = 'image-grid-container')
 
         const data = await response.json();
 
-        // ✅ pass original text
+        // pass original text so we control word splitting
         displayImageGrid(data, container, text);
         
     } catch (error) {
@@ -36,14 +36,13 @@ function displayImageGrid(data, container, originalText) {
 
     const gridWrapper = document.createElement('div');
     gridWrapper.style.display = 'flex';
-    gridWrapper.style.flexDirection = 'column'; // stack words vertically
+    gridWrapper.style.flexDirection = 'column'; // words stacked vertically
     gridWrapper.style.gap = '15px';
     gridWrapper.style.padding = '15px';
     gridWrapper.style.backgroundColor = '#f9f9f9';
     gridWrapper.style.borderRadius = '10px';
-    gridWrapper.style.border = '2px solid #26b5a3'; // ✅ border stays
+    gridWrapper.style.border = '2px solid #26b5a3'; // border stays
 
-    // 🔑 split words from original text
     const words = originalText.trim().split(/\s+/);
 
     let imageIndex = 0;
@@ -54,7 +53,10 @@ function displayImageGrid(data, container, originalText) {
         row.style.flexWrap = 'wrap';
         row.style.gap = '12px';
 
-        for (let i = 0; i < word.length; i++) {
+        // remove punctuation so indexing stays correct
+        const cleanWord = word.replace(/[.,!?'"]/g, '');
+
+        for (let i = 0; i < cleanWord.length; i++) {
             const imageObj = data.images[imageIndex++];
             if (!imageObj) break;
 
