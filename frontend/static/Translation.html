@@ -7,6 +7,12 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Small transition for the button "press" effect */
+        .switch-button {
+            transition: transform 0.1s ease;
+        }
+    </style>
 </head>
 <body>
 
@@ -106,6 +112,35 @@
             const previewEl = document.getElementById('preview');
             const textInputEl = document.getElementById('text-input');
 
+            // --- KEYBOARD SHORTCUTS LOGIC ---
+            window.addEventListener('keydown', function(event) {
+                // If user is typing in the textarea, don't trigger the recording buttons
+                if (document.activeElement === textInputEl) {
+                    return;
+                }
+
+                // SPACE -> START RECORDING
+                if (event.key === " " || event.code === "Space") {
+                    if (recordBtn && !recordBtn.disabled) {
+                        event.preventDefault(); // Stop page scroll
+                        recordBtn.click();
+                        recordBtn.style.transform = "scale(0.95)";
+                        setTimeout(() => recordBtn.style.transform = "scale(1)", 100);
+                    }
+                }
+
+                // ENTER -> STOP RECORDING & TRANSLATE
+                if (event.key === "Enter") {
+                    if (stopBtn && !stopBtn.disabled) {
+                        event.preventDefault();
+                        stopBtn.click();
+                        stopBtn.style.transform = "scale(0.95)";
+                        setTimeout(() => stopBtn.style.transform = "scale(1)", 100);
+                    }
+                }
+            });
+
+            // --- VOICE RECORDING LOGIC ---
             if (recordBtn && stopBtn) {
                 recordBtn.onclick = async () => {
                     audioChunks = []; 
@@ -155,7 +190,6 @@
                         if (result.text) {
                             statusLabel.innerText = "Transcribed!";
                             textInputEl.value = result.text;
-                            // Trigger the global function from TextToSignGrid.js
                             if (window.displayTextToSignGrid) {
                                 window.displayTextToSignGrid(result.text);
                             }

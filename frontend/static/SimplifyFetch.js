@@ -30,3 +30,15 @@ async function sendTextToBackend() {
 
     document.getElementById("outputArea").textContent = data.simplified;
 }
+
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        // If typing in a box, let Enter work normally unless Ctrl is held
+        if (event.target.tagName === "TEXTAREA" && !event.ctrlKey) {
+            return; 
+        }
+
+        event.preventDefault(); 
+        sendTextToBackend(); // Triggers the action
+    }
+});
