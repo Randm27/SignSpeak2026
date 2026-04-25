@@ -1,26 +1,20 @@
-/**
- * Fetches first image for each letter in text and displays in a grid
- * @param {string} text - Text to get images for
- * @param {string} containerId - Container to display grid
- */
 async function displayTextToSignGrid(text, containerId = 'image-grid-container') {
     try {
-        // Get container
         const container = document.getElementById(containerId);
         if (!container) return;
         
-        // Validate input
         if (!text || text.trim().length === 0) {
             container.innerHTML = '';
             return;
         }
 
-        // Fetch images from backend
-        const response = await fetch(`http://localhost:5001/get-images-for-text/${encodeURIComponent(text)}`);
+        const cfg = typeof getconfig === 'function' ? getconfig() : { SERVER_GESTURE_URL: "http://127.0.0.1:5001" };
+        
+        // Използваме URL от твоя конфигурационен файл
+        const response = await fetch(`${cfg.SERVER_GESTURE_URL}/get-images-for-text/${encodeURIComponent(text)}`);
         
         if (!response.ok) {
-            const error = await response.json();
-            console.error('Error:', error.error);
+            console.error('Error fetching images');
             container.innerHTML = '';
             return;
         }
@@ -29,69 +23,48 @@ async function displayTextToSignGrid(text, containerId = 'image-grid-container')
         displayImageGrid(data, container);
         
     } catch (error) {
-        console.error('Error fetching images:', error);
+        console.error('Error:', error);
     }
 }
 
-/**
- * Displays images in a grid
- * @param {object} data - Data containing images
- * @param {HTMLElement} container - Container element
- */
 function displayImageGrid(data, container) {
     container.innerHTML = '';
+    if (!data.images || data.images.length === 0) return;
 
-    if (!data.images || data.images.length === 0) {
-        container.innerHTML = '';
-        return;
-    }
-
-    // Create grid wrapper
     const gridWrapper = document.createElement('div');
     gridWrapper.style.display = 'grid';
     gridWrapper.style.gridTemplateColumns = 'repeat(auto-fill, minmax(140px, 1fr))';
     gridWrapper.style.gap = '12px';
     gridWrapper.style.padding = '15px';
     gridWrapper.style.backgroundColor = '#f9f9f9';
-    gridWrapper.style.borderRadius = '8px';
-    gridWrapper.style.border = '1px solid #26b5a3';
-    gridWrapper.style.marginBottom = '15px';
+    gridWrapper.style.borderRadius = '10px';
+    gridWrapper.style.border = '2px solid #26b5a3';
 
-    // Create image items
     data.images.forEach((imageObj) => {
         const card = document.createElement('div');
         card.style.backgroundColor = 'white';
         card.style.borderRadius = '6px';
-        card.style.overflow = 'hidden';
-        card.style.boxShadow = '0 1px 4px rgba(0, 0, 0, 0.1)';
-        card.style.transition = 'transform 0.2s ease';
-        card.style.cursor = 'pointer';
+        card.style.textAlign = 'center';
+        card.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
 
         const img = document.createElement('img');
         img.src = imageObj.data;
-
-        // FIX: support both "letter" and "character"
-        const char = imageObj.letter || imageObj.character;
-
-        img.alt = `Letter ${char}`;
         img.style.width = '100%';
         img.style.height = '130px';
         img.style.objectFit = 'cover';
-        img.style.display = 'block';
 
         const label = document.createElement('div');
-        label.textContent = char.toUpperCase();
-        label.style.textAlign = 'center';
-        label.style.padding = '8px';
-        label.style.fontSize = '14px';
+        label.textContent = (imageObj.letter || imageObj.character).toUpperCase();
+        label.style.padding = '5px';
         label.style.fontWeight = 'bold';
         label.style.color = '#26b5a3';
-        label.style.backgroundColor = '#fafafa';
 
         card.appendChild(img);
         card.appendChild(label);
         gridWrapper.appendChild(card);
     });
-
     container.appendChild(gridWrapper);
 }
+
+// Правим функцията достъпна глобално за вградения скрипт в HTML
+window.displayTextToSignGrid = displayTextToSignGrid;

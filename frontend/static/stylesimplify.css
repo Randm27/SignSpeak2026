@@ -379,3 +379,23 @@ footer {
     align-items: center;
     height: 200px;
   }
+
+.voice-selector {
+    margin: 10px 0;
+    font-family: Arial, sans-serif;
+}
+
+#voiceSelect {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    font-size: 14px;
+    width: 200px;
+}
+
+#voiceSelect:focus {
+    outline: none;
+    border-color: #34b3a0; /* Цвета на твоя бутон */
+}

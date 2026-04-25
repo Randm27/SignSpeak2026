@@ -10,3 +10,4 @@ dataset/
 backend/backend_ml/my_gesture_model/
 my_gesture_model.zip
 .venv
+ffmpeg.exe

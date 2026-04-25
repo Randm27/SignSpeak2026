@@ -27,5 +27,6 @@ async function sendTextToBackend() {
     const data = await response.json();
 
     hideLoader();
+
     document.getElementById("outputArea").textContent = data.simplified;
 }

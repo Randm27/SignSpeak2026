@@ -7,10 +7,7 @@ import base64
 
 # --- NEW IMPORT FOR SPEECH ---
 # Make sure Speech_to_text.py is in the same folder!
-try:
-    from Speech_to_text import transcribe_audio_file
-except ImportError:
-    print("⚠️ Warning: Speech_to_text.py not found in this directory.")
+from Speech_to_text import transcribe_audio_file
 
 load_dotenv()
 

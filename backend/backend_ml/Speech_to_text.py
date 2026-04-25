@@ -12,7 +12,7 @@ os.environ["PATH"] += os.pathsep + current_dir
 print("⏳ Зареждане на Whisper (английски модел)...")
 try:
     # Using "medium" as requested. device="cpu" is safer for most PCs.
-    model = whisper.load_model("medium", device="cpu")
+    model = whisper.load_model("base", device="cpu")
     print("✅ Whisper е готов за английска реч!")
 except Exception as e:
     print(f"❌ Грешка при зареждане на Whisper: {e}")
