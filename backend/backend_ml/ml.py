@@ -8,8 +8,12 @@ import requests
 from io import BytesIO
 import numpy as np
 import base64
+import os
 
 # Load model and processor
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(SCRIPT_DIR, "my_gesture_model")
+
 model_name = "my_gesture_model"
 model = SiglipForImageClassification.from_pretrained(model_name)
 processor = AutoImageProcessor.from_pretrained(model_name)

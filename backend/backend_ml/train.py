@@ -5,11 +5,13 @@ from PIL import Image
 import torch, os
 
 # --- Config ---
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+DATASET_DIR = os.path.join(SCRIPT_DIR, "dataset")
+SAVE_PATH = os.path.join(SCRIPT_DIR, "my_gesture_model")
+
 MODEL_NAME = "prithivMLmods/Hand-Gesture-19"
-DATASET_DIR = "dataset"
 EPOCHS = 10
 BATCH_SIZE = 16
-SAVE_PATH = "my_gesture_model"
 
 # --- Build label map from your folders ---
 gesture_classes = sorted(os.listdir(DATASET_DIR))
@@ -55,7 +57,6 @@ model.train()
 for epoch in range(EPOCHS):
     total_loss = 0
     for pixels, labels in loader:
-        labels = torch.tensor(labels)
         outputs = model(pixel_values=pixels)
         loss = criterion(outputs.logits, labels)
         optimizer.zero_grad()
